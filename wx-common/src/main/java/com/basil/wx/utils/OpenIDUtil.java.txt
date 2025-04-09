@@ -1,0 +1,56 @@
+package com.basil.wx.utils;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.codehaus.jettison.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class OpenIDUtil {
+    // 微信接口常量（示例）
+    private static final String WX_API_URL = "https://api.weixin.qq.com/sns/jscode2session";
+    private static final String APP_ID = "your weAppId";
+    private static final String APP_SECRET = "your weAppSecret";
+    public static String getOpenID(String code) {
+        String openid = null;
+        try {
+            // 1. 构建完整请求URL
+            String urlStr = String.format("%s?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
+                    WX_API_URL, APP_ID, APP_SECRET, code);
+            // 2. 创建URL对象并打开连接
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            // 3. 检查HTTP响应状态码
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                // 4. 读取响应内容
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                // 5. 解析JSON数据
+                JSONObject json = new JSONObject(response.toString());
+                if (json.has("openid")) {
+                    openid = json.getString("openid");
+                } else if (json.has("errcode")) {
+                    System.err.println("微信接口错误: " + json.toString());
+                }
+            } else {
+                System.err.println("HTTP请求失败，状态码: " + conn.getResponseCode());
+            }
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return openid;
+    }
+}

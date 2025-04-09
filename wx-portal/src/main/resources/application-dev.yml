@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wx?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2b8&zeroDateTimeBehavior=CONVERT_TO_NULL
+    username: root
+    password: 317935q
+  rabbitmq:
+    host: localhost # rabbitMQ的ip地址
+    port: 5672
+    username: guest
+    password: guest

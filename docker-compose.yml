@@ -1,0 +1,49 @@
+name: wxService
+services:
+  mysql:
+    image: mysql
+    restart: always #崩溃后自动重启
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=317935q
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.mysql-data:/var/lib/mysql #将数据目录挂载到本地目录以进行持久化  - /root/mysql/data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d #启动脚本                     - /root/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - wxnetwork
+  rabbit:
+    image: rabbitmq:3.8-management
+    restart: always
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./.rabbit-data:/var/lib/rabbitmq
+    networks:
+      - wxnetwork
+  wx-admin:
+    container_name: wx-admin
+    build:
+      context: ./wx-admin
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - wxnetwork
+  wx-portal:
+    container_name: wx-portal
+    build:
+      context: ./wx-portal
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - wxnetwork
+networks:
+  wxnetwork:

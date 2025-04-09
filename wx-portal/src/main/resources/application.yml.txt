@@ -1,0 +1,36 @@
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.basil.wx.pojo
+server:
+  port: 80 # 端口
+  ssl: # 设置https安全证书
+    enabled: true
+    key-store: xxx.xxx
+    key-store-password: xxx
+    key-store-type: PKCS12
+    protocol: TLS
+    enabled-protocols: TLSv1.2
+    ciphers: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+  address: 0.0.0.0  # 允许外部访问
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    password: admin
+    url: jdbc:mysql://localhost:3306/wx?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2b8&zeroDateTimeBehavior=CONVERT_TO_NULL
+    username: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+# 添加文件上传目录的配置
+upload:
+  dir: D:/GraduationDesignProject/pythonTroch/data/corn_leaf/test/0
+# Flask Web服务地址
+flask:
+  url: http://localhost:5000/predict
