@@ -13,4 +13,4 @@ upload:
   dir: /root/wx/corn_leaf
 # Flask Web服务地址
 flask:
-  url: http://python:5000/predict
+  url: http://model_api:5000/predict

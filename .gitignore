@@ -38,4 +38,4 @@ build/
 wx-common/src/main/java/com/basil/wx/utils/AliOSSUtil.java
 wx-common/src/main/java/com/basil/wx/utils/OpenIDUtil.java
 wx-portal/src/main/resources/application.yml
-qiguoqiang.top.pfx
+wx-portal/src/main/resources/qiguoqiang.top.pfx
