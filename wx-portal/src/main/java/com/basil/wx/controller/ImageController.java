@@ -5,6 +5,7 @@ import com.basil.wx.pojo.Users;
 import com.basil.wx.service.IimageService;
 import com.basil.wx.service.IuserService;
 import com.basil.wx.utils.AliOSSUtil;
+import com.basil.wx.utils.PredictUtil;
 import com.basil.wx.utils.Result;
 import com.basil.wx.utils.UUIDUtil;
 import jakarta.servlet.http.HttpSession;
@@ -28,8 +29,6 @@ public class ImageController {
     private IimageService imageService;
     @Autowired
     private IuserService userService;
-    @Autowired
-    private RestTemplate restTemplate;
 
     // 从配置文件中获取上传文件保存到本地的目录
     @Value("${upload.dir}")
@@ -52,17 +51,13 @@ public class ImageController {
             Image image = new Image();
             image.setUploadType(uploadType); // 保存上传类型信息
             image.setOpenId(openId); // 保存用户openId信息
+
             // 1、发送至flask Web应用识别数据
-            // 发送文件到 Flask 端点
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            // 构造请求
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("file", file.getResource());
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            // 调用 Flask Web服务
-            ResponseEntity<Map> response = restTemplate.postForEntity(flaskUrl, requestEntity, Map.class);
-            Map<String, Object> responseBody = response.getBody();
+            // 使用工具类
+            Map<String, Object> responseBody = PredictUtil.predict(file, flaskUrl);
+            if ((Integer) responseBody.get("code") == Result.ERROR) {
+                return Result.error("识别失败");
+            }
             // 获取识别结果
             Integer disease = (Integer) responseBody.get("class_id");
             image.setDisease(disease);//设置识别信息（关键）
@@ -74,16 +69,12 @@ public class ImageController {
             // 2、封装Image类并保存数据库
             // 保存文件
             // 方案1、文件保存到本地
-            /*
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs(); // 没有则创建目录
-            }
+            /*File directory = new File(uploadDir);
+            if (!directory.exists()) { directory.mkdirs(); }// 没有则创建目录
             String url = UUIDUtil.getUUID(file);
             File destFile = new File(directory, url);
-            // 保存文件到指定路径
-            file.transferTo(destFile);
-            */
+            file.transferTo(destFile); // 保存文件到指定路径 */
+
             // 方案2、文件保存到OSS
             String url = AliOSSUtil.uploadFile(UUIDUtil.getUUID(file), file.getInputStream());
             String subUrl = url.substring(url.lastIndexOf('/') + 1);

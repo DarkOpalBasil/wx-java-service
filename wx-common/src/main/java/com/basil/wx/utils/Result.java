@@ -19,18 +19,6 @@ public class Result {
 	// 后台返回给前端的数据 Object， User、List<User>、Map
 	private Object data;
 
-	// boolean: ok
-	//private Boolean ok;
-
-	/*public boolean isOk() {
-		return code == OK;
-	}*/
-
-	//{"code":0,"msg":"删除成功","data":null,"address":"beijing","ok":true}
-	/*public String getAddress() {
-		return "beijing";
-	}*/
-
 	public Result() {
 	}
 	
