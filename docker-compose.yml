@@ -33,7 +33,7 @@ services:
       context: ./wx-admin
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8085:8085
     networks:
       - wxnetwork
   wx-portal:
@@ -42,7 +42,7 @@ services:
       context: ./wx-portal
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 8082:8082
     networks:
       - wxnetwork
 networks:

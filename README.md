@@ -79,7 +79,7 @@
 ## 使用说明
 > 微信搜索 “玉黍助农-玉米叶部病变识别” 获取小程序体验版
 > 
-> <img src="https://github.com/DarkOpalBasil/weapp-cornleaf/blob/main/image/weapplogo.png" width="100px">玉黍助农
+> <img src="https://github.com/DarkOpalBasil/weapp-cornleaf/blob/main/image/weapplogo.png" width="50px">玉黍助农
 
 ## 项目其他仓库
 * [微信小程序前端](https://github.com/DarkOpalBasil/weapp-cornleaf)

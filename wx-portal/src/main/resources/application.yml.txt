@@ -5,8 +5,8 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.basil.wx.pojo
 server:
-  port: 80 # 端口
-  ssl: # 设置https安全证书
+  port: 8082 # 端口
+  ssl: # 设置SpringBoot的https安全证书
     enabled: true
     key-store: xxx.xxx
     key-store-password: xxx
