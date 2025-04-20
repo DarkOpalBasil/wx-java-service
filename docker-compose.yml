@@ -1,4 +1,4 @@
-name: wxService
+name: wx-service
 services:
   mysql:
     image: mysql
