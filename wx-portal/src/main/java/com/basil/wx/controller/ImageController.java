@@ -46,6 +46,9 @@ public class ImageController {
         if (file.isEmpty() || uploadType != 0 && uploadType != 1 && uploadType != 2) {
             return Result.error("文件为空或未指定参数");
         }
+        if (openId == null || "".equals(openId)) {
+            return Result.error("用户信息错误，请登录后重试！");
+        }
         // 处理上传文件
         try {
             Image image = new Image();
