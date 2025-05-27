@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.basil.wx.mapper.SoftmaxMapper">
+  <resultMap id="BaseResultMap" type="com.basil.wx.pojo.Softmax">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="diseases" jdbcType="TINYINT" property="diseases" />
+    <result column="diseases_1" jdbcType="DECIMAL" property="diseases1" />
+    <result column="diseases_2" jdbcType="DECIMAL" property="diseases2" />
+    <result column="diseases_3" jdbcType="DECIMAL" property="diseases3" />
+    <result column="diseases_4" jdbcType="DECIMAL" property="diseases4" />
+    <result column="diseases_5" jdbcType="DECIMAL" property="diseases5" />
+    <result column="diseases_6" jdbcType="DECIMAL" property="diseases6" />
+    <result column="diseases_7" jdbcType="DECIMAL" property="diseases7" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, image, diseases, diseases_1, diseases_2, diseases_3, diseases_4, diseases_5, 
+    diseases_6, diseases_7, `status`, is_deleted, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from softmax
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from softmax
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.basil.wx.pojo.Softmax">
+    insert into softmax (id, image, diseases, 
+      diseases_1, diseases_2, diseases_3, 
+      diseases_4, diseases_5, diseases_6, 
+      diseases_7, `status`, is_deleted, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR}, #{diseases,jdbcType=TINYINT}, 
+      #{diseases1,jdbcType=DECIMAL}, #{diseases2,jdbcType=DECIMAL}, #{diseases3,jdbcType=DECIMAL}, 
+      #{diseases4,jdbcType=DECIMAL}, #{diseases5,jdbcType=DECIMAL}, #{diseases6,jdbcType=DECIMAL}, 
+      #{diseases7,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{isDeleted,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.basil.wx.pojo.Softmax">
+    insert into softmax
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="image != null">
+        image,
+      </if>
+      <if test="diseases != null">
+        diseases,
+      </if>
+      <if test="diseases1 != null">
+        diseases_1,
+      </if>
+      <if test="diseases2 != null">
+        diseases_2,
+      </if>
+      <if test="diseases3 != null">
+        diseases_3,
+      </if>
+      <if test="diseases4 != null">
+        diseases_4,
+      </if>
+      <if test="diseases5 != null">
+        diseases_5,
+      </if>
+      <if test="diseases6 != null">
+        diseases_6,
+      </if>
+      <if test="diseases7 != null">
+        diseases_7,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="diseases != null">
+        #{diseases,jdbcType=TINYINT},
+      </if>
+      <if test="diseases1 != null">
+        #{diseases1,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases2 != null">
+        #{diseases2,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases3 != null">
+        #{diseases3,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases4 != null">
+        #{diseases4,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases5 != null">
+        #{diseases5,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases6 != null">
+        #{diseases6,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases7 != null">
+        #{diseases7,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.basil.wx.pojo.Softmax">
+    update softmax
+    <set>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="diseases != null">
+        diseases = #{diseases,jdbcType=TINYINT},
+      </if>
+      <if test="diseases1 != null">
+        diseases_1 = #{diseases1,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases2 != null">
+        diseases_2 = #{diseases2,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases3 != null">
+        diseases_3 = #{diseases3,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases4 != null">
+        diseases_4 = #{diseases4,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases5 != null">
+        diseases_5 = #{diseases5,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases6 != null">
+        diseases_6 = #{diseases6,jdbcType=DECIMAL},
+      </if>
+      <if test="diseases7 != null">
+        diseases_7 = #{diseases7,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.basil.wx.pojo.Softmax">
+    update softmax
+    set image = #{image,jdbcType=VARCHAR},
+      diseases = #{diseases,jdbcType=TINYINT},
+      diseases_1 = #{diseases1,jdbcType=DECIMAL},
+      diseases_2 = #{diseases2,jdbcType=DECIMAL},
+      diseases_3 = #{diseases3,jdbcType=DECIMAL},
+      diseases_4 = #{diseases4,jdbcType=DECIMAL},
+      diseases_5 = #{diseases5,jdbcType=DECIMAL},
+      diseases_6 = #{diseases6,jdbcType=DECIMAL},
+      diseases_7 = #{diseases7,jdbcType=DECIMAL},
+      `status` = #{status,jdbcType=TINYINT},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByDiseasesId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from softmax
+    where diseases = #{diseases,jdbcType=TINYINT}
+  </select>
+</mapper>

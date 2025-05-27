@@ -1,25 +1,23 @@
 package com.basil.wx.controller;
 
 import com.basil.wx.pojo.Image;
+import com.basil.wx.pojo.Softmax;
 import com.basil.wx.pojo.Users;
 import com.basil.wx.service.IimageService;
+import com.basil.wx.service.IsoftmaxService;
 import com.basil.wx.service.IuserService;
 import com.basil.wx.utils.AliOSSUtil;
 import com.basil.wx.utils.PredictUtil;
 import com.basil.wx.utils.Result;
 import com.basil.wx.utils.UUIDUtil;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,6 +27,8 @@ public class ImageController {
     private IimageService imageService;
     @Autowired
     private IuserService userService;
+    @Autowired
+    private IsoftmaxService softmaxService;
 
     // 从配置文件中获取上传文件保存到本地的目录
     @Value("${upload.dir}")
@@ -43,6 +43,7 @@ public class ImageController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("uploadType") Byte uploadType,
             @RequestParam("openId") String openId) {
+        System.out.println("Flask 服务地址：" + flaskUrl);
         if (file.isEmpty() || uploadType != 0 && uploadType != 1 && uploadType != 2) {
             return Result.error("文件为空或未指定参数");
         }
@@ -52,21 +53,37 @@ public class ImageController {
         // 处理上传文件
         try {
             Image image = new Image();
+            Softmax softmax = new Softmax();
+            softmax.setStatus((byte) 1);
+            softmax.setIsDeleted((byte) 0);
+            softmax.setUpdateTime(new Date());
+            softmax.setCreateTime(new Date());
             image.setUploadType(uploadType); // 保存上传类型信息
             image.setOpenId(openId); // 保存用户openId信息
 
             // 1、发送至flask Web应用识别数据
             // 使用工具类
             Map<String, Object> responseBody = PredictUtil.predict(file, flaskUrl);
-            if ((Integer) responseBody.get("code") == Result.ERROR) {
-                return Result.error("识别失败");
-            }
             // 获取识别结果
             Integer disease = (Integer) responseBody.get("class_id");
             image.setDisease(disease);//设置识别信息（关键）
+            softmax.setDiseases(disease);
             // 额外信息
             String class_name = (String) responseBody.get("class_name");
             String probability = (String) responseBody.get("result_image_url");
+            // 取出 softmax_list
+            List<?> softmaxListRaw = (List<?>) responseBody.get("softmax_list");
+
+            // 转换为 BigDecimal 并赋值
+            if (softmaxListRaw != null) {
+                if (softmaxListRaw.size() > 0) softmax.setDiseases1(new BigDecimal(softmaxListRaw.get(0).toString()));
+                if (softmaxListRaw.size() > 1) softmax.setDiseases2(new BigDecimal(softmaxListRaw.get(1).toString()));
+                if (softmaxListRaw.size() > 2) softmax.setDiseases3(new BigDecimal(softmaxListRaw.get(2).toString()));
+                if (softmaxListRaw.size() > 3) softmax.setDiseases4(new BigDecimal(softmaxListRaw.get(3).toString()));
+                if (softmaxListRaw.size() > 4) softmax.setDiseases5(new BigDecimal(softmaxListRaw.get(4).toString()));
+                if (softmaxListRaw.size() > 5) softmax.setDiseases6(new BigDecimal(softmaxListRaw.get(5).toString()));
+                if (softmaxListRaw.size() > 6) softmax.setDiseases7(new BigDecimal(softmaxListRaw.get(6).toString()));
+            }
             System.out.println("识别结果：" + disease + "-" + class_name + "-" + "http://localhost:5000/"+probability);
 
             // 2、封装Image类并保存数据库
@@ -82,8 +99,10 @@ public class ImageController {
             String url = AliOSSUtil.uploadFile(UUIDUtil.getUUID(file), file.getInputStream());
             String subUrl = url.substring(url.lastIndexOf('/') + 1);
             image.setImage(subUrl); // 保存文件UUID_name的路径
+            softmax.setImage(subUrl);
             // 插入数据库数据
             imageService.insert(image);
+            softmaxService.insert(softmax);
             // 返回成功结果
             return Result.ok("上传成功");
         } catch (Exception e) {
